@@ -1,5 +1,6 @@
 package pieces;
 
+import board.Board;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class Piece {
       private Position startingPos;
       private Position pos;
       private ArrayList<Position> legalMoves = new ArrayList();
+      private boolean isWhite;
       
       // Constructor
       public Piece(Position startingPos) {
@@ -50,6 +52,14 @@ public class Piece {
             this.legalMoves = legalMoves;
       }
       
+      public boolean isWhite() {
+            return isWhite;
+      }
+      public void setIsWhite(boolean isWhite) {
+            this.isWhite = isWhite;
+      }
+      
+      // Asset loading
       public BufferedImage LoadAndScaleSprite(String path){
             BufferedImage loadedSprite;
             
@@ -74,4 +84,9 @@ public class Piece {
             
             return null;
       }
+      
+      // Override functions
+      public void calculateLegalMoves(Board board) {}
+      public boolean canPromote() {return false;}
+      public boolean isUnderCheck() {return false;}
 }

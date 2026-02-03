@@ -9,7 +9,7 @@ import board.*;
 
 
 /**
- *Chess pieces icons by "Freepik" - flaticon.com/authors/freepik
+ * Icons by: https://www.flaticon.com/authors/good-ware
  * 
  * @author Cantoni Alessandro
  */
