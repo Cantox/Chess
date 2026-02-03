@@ -12,6 +12,7 @@ public class Board extends JPanel {
       public Board(boolean empty) {
             if(!empty){
                   board[0][0] = new BlackPawn(new Position(0,0));
+                  board[0][1] = new WhitePawn(new Position(0,1));
             }
       }
       
