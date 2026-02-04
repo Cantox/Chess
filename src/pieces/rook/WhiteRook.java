@@ -2,8 +2,11 @@ package pieces.rook;
 
 import libs.Position;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import libs.Settings;
 import pieces.Piece;
+=======
+>>>>>>> parent of efb3a4c (added all pieces no king logic)
 =======
 >>>>>>> parent of efb3a4c (added all pieces no king logic)
 

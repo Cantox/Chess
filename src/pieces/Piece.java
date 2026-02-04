@@ -89,11 +89,15 @@ public class Piece {
       public void calculateLegalMoves(Board board) {}
       public boolean canPromote() {return false;}
 <<<<<<< HEAD
+<<<<<<< HEAD
       public boolean isUnderCheck(Board board) {return false;}
       
       public Piece copy(){
             return new Piece(new Position(getPos().row(), getPos().col()));
       }
+=======
+      public boolean isUnderCheck() {return false;}
+>>>>>>> parent of efb3a4c (added all pieces no king logic)
 =======
       public boolean isUnderCheck() {return false;}
 >>>>>>> parent of efb3a4c (added all pieces no king logic)
