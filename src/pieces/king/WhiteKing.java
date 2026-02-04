@@ -18,12 +18,18 @@ public class WhiteKing extends King {
       
       @Override
       public boolean isUnderCheck(Board board) {
-            for(Piece piece : board.getBlackPieces())
+            for(Piece piece : board.blackPieces)
                   if(piece.getLegalMoves().contains(this.getPos()))
                         return true;
             
             return false;
       }
+      
+      @Override
+      public Piece copy(){
+            return new WhiteKing(new Position(getPos().row(), getPos().col()));
+      }
+      
       
       @Override
       public void calculateLegalMoves(Board board) {
@@ -48,35 +54,34 @@ public class WhiteKing extends King {
                         boolean tileAttacked = false; // Check for tile attacked
                         for(int i=0; i<board.blackPieces.size() && !tileAttacked; i++)
                               for(Position legalMove : board.blackPieces.get(i).getLegalMoves())
-                                    if(legalMove.row()==row+r && legalMove.col()==col+c){
+                                    if(legalMove.row()==row+r && legalMove.col()==col+c)
                                           tileAttacked=true;
-                                    }
                         if(tileAttacked)
                               continue;
                         
                         if(nextToKing(row+r,col+c,b)) // Check if tile is next to king
                               continue;
                         
-                        if(b[row+r][col+c]!=null && !b[row+r][col+c].isWhite()) {
-                              Piece[][] clonedBoard = b.clone();
-                              ArrayList<Piece> clonedBlackPieces = (ArrayList<Piece>) board.blackPieces.clone();
-                              ArrayList<Piece> clonedWhitePieces = (ArrayList<Piece>) board.whitePieces.clone();
+                        if( (b[row+r][col+c]!=null && !b[row+r][col+c].isWhite()) || b[row+r][col+c]==null) {
+                              Board clonedBoard = board.copy(); // Clone
                               
-                              clonedBlackPieces.remove(clonedBoard[row+r][col+c]); // Eat piece
+                              if(clonedBoard.board[row+r][col+c]!=null && !clonedBoard.board[row+r][col+c].isWhite())
+                                    clonedBoard.blackPieces.remove(clonedBoard.board[row+r][col+c]); // Eat piece
                               
-                              clonedBoard[row+r][col+c] = this; // Move king
-                              clonedWhitePieces.remove(this);
-                              clonedWhitePieces.add(clonedBoard[row+r][col+c]);
+                              clonedBoard.board[row+r][col+c] = this.copy(); // Put the king in the new pos
+                              clonedBoard.board[row+r][col+c].setPos(new Position(row+r,col+c)); // Update king's pos
+                              clonedBoard.whitePieces.add( clonedBoard.board[row+r][col+c]); // Add new king to list
+                              clonedBoard.whitePieces.remove( clonedBoard.board[row][col]); // Remove old king from list
+                              clonedBoard.board[row][col]  = null; // Remove the king from its current pos
+                              
                               
                               for(int boardRow=0; boardRow<Settings.ROWS; boardRow++) // Recalculate legal moves
-                                    for(Piece piece : clonedBoard[boardRow]){
-                                          if(piece!=null && !(piece instanceof King)){
-                                                Board newBoard = new Board(true);
-                                                newBoard.board = clonedBoard;
-                                          }
+                                    for(Piece piece : clonedBoard.board[boardRow]){
+                                          if(piece!=null && !(piece instanceof King))
+                                                piece.calculateLegalMoves(clonedBoard);
                                     }
                               
-                              if(this.isUnderCheck(clonedBoard)) // Check if king in new pos is under check
+                              if(clonedBoard.board[row+r][col+c].isUnderCheck(clonedBoard)) // Check if king in new pos is under check
                                     continue;
                         }      
                         

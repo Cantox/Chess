@@ -16,6 +16,10 @@ public class BlackPawn extends Pawn {
             super.setIsWhite(false);
       }
       
+      @Override
+      public Piece copy(){
+            return new BlackPawn(new Position(getPos().row(), getPos().col()));
+      }
       
       @Override
       public void calculateLegalMoves(Board board){

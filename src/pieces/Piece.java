@@ -92,4 +92,8 @@ public class Piece {
       public void calculateLegalMoves(Board board) {}
       public boolean canPromote() {return false;}
       public boolean isUnderCheck(Board board) {return false;}
+      
+      public Piece copy(){
+            return new Piece(new Position(getPos().row(), getPos().col()));
+      }
 }

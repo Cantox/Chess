@@ -18,6 +18,11 @@ public class WhitePawn extends Pawn {
       }
       
       @Override
+      public Piece copy(){
+            return new WhitePawn(new Position(getPos().row(), getPos().col()));
+      }
+      
+      @Override
       public void calculateLegalMoves(Board board){
             int row = super.getPos().row();
             int col = super.getPos().col();

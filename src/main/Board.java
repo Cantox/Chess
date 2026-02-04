@@ -19,14 +19,14 @@ public class Board extends JPanel {
       public final ArrayList<Piece> whitePieces = new ArrayList();
       
       public Board(boolean empty) {
-            addMouseListener(new MouseAdapter(){
-                  @Override
-                  public void mousePressed(MouseEvent e){
-                        handleClick(e.getX(), e.getY());
-                  }
-            });
-            
             if(!empty){
+                  addMouseListener(new MouseAdapter(){
+                        @Override
+                        public void mousePressed(MouseEvent e){
+                              handleClick(e.getX(), e.getY());
+                        }
+                  });
+                  
                   Piece[] pieces = new PieceSet().getPieces();
                   for(Piece piece : pieces){
                         board[piece.getPos().row()][piece.getPos().col()] = piece;
@@ -173,11 +173,12 @@ public class Board extends JPanel {
             }
             
             // Update kings legal moves
+            for(Position pos : kingPos){
+                  board[pos.row()][pos.col()].calculateLegalMoves(this);
+            }
             
             // Handle king
             /*
-            First i calculate the king's legal moves (all squares around him excluding occupied and attackd ones)
-            
             LET'S SAY I'M DOING THE WHITE KING
             I DON'T HAVE TO TOUCH THE KING'S LEGAL MOVES BECAUSE THEY ALREADY EXCLUDE THE ATTACKED SQUARES
             1- Create a list of all the attacking black pieces ( legalMoves.contatins(king.pos) )
@@ -191,7 +192,7 @@ public class Board extends JPanel {
       
       private void tryRemovingWhitePieces(Piece king){
             // Make the clone
-            Board boardClone = this;
+            Board boardClone = this.copy();
             
             // Check every white piece
             for(Piece whitePiece : whitePieces){
@@ -212,7 +213,7 @@ public class Board extends JPanel {
       }
       private void tryRemovingBlackPieces(Piece king){
             // Make the clone
-            Board boardClone = this;
+            Board boardClone = this.copy();
             
             // Check every white piece
             for(Piece blackPiece : blackPieces){
@@ -230,5 +231,23 @@ public class Board extends JPanel {
                   boardClone.blackPieces.add(blackPiece);
                   boardClone.board[blackPiece.getPos().row()][blackPiece.getPos().col()] = blackPiece;
             }
+      }
+      
+      
+      public Board copy(){
+            Board clone = new Board(true);
+            for(int r=0; r<Settings.ROWS; r++)
+                  for(Piece piece : board[r]){
+                        if(piece==null)
+                              continue;
+                        
+                        clone.board[piece.getPos().row()][piece.getPos().col()] = piece.copy();
+                        if(piece.isWhite())
+                              clone.whitePieces.add(piece.copy());
+                        else
+                              clone.blackPieces.add(piece.copy());
+                  }
+            
+            return clone;
       }
 }
