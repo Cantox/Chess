@@ -3,7 +3,7 @@ package pieces.pawn;
 
 import java.util.ArrayList;
 
-import board.Board;
+import main.Board;
 import libs.Position;
 import libs.Settings;
 import pieces.Piece;
@@ -12,7 +12,7 @@ public class WhitePawn extends Pawn {
       public WhitePawn(Position startingPos){
             super(startingPos);
             
-            super.setSprite(super.LoadAndScaleSprite("/img/white/pawn.png"));
+            super.setSprite(super.LoadAndScaleSprite(Settings.DEFAULT_PACK_PATH + "white/pawn.png"));
             
             super.setIsWhite(true);
       }

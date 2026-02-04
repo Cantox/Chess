@@ -1,6 +1,6 @@
 package pieces;
 
-import board.Board;
+import main.Board;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -51,6 +51,9 @@ public class Piece {
       public void setLegalMoves(ArrayList<Position> legalMoves) {
             this.legalMoves = legalMoves;
       }
+      public void clearLegalMoves(){
+            legalMoves.clear();
+      }
       
       public boolean isWhite() {
             return isWhite;
@@ -88,5 +91,5 @@ public class Piece {
       // Override functions
       public void calculateLegalMoves(Board board) {}
       public boolean canPromote() {return false;}
-      public boolean isUnderCheck() {return false;}
+      public boolean isUnderCheck(Board board) {return false;}
 }

@@ -2,7 +2,7 @@ package pieces.pawn;
 
 import java.util.ArrayList;
 
-import board.Board;
+import main.Board;
 import libs.Position;
 import libs.Settings;
 import pieces.Piece;
@@ -11,7 +11,7 @@ public class BlackPawn extends Pawn {
       public BlackPawn(Position startingPos){
             super(startingPos);
             
-            super.setSprite(super.LoadAndScaleSprite("/img/black/pawn.png"));
+            super.setSprite(super.LoadAndScaleSprite(Settings.DEFAULT_PACK_PATH + "black/pawn.png"));
             
             super.setIsWhite(false);
       }
