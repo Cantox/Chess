@@ -3,9 +3,9 @@ package main;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
-import libs.Settings;
-
-
+import libs.*;
+import pieces.*;
+import board.*;
 
 
 /**

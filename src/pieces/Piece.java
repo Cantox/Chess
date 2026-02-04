@@ -1,6 +1,6 @@
 package pieces;
 
-import main.Board;
+import board.Board;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -51,9 +51,6 @@ public class Piece {
       public void setLegalMoves(ArrayList<Position> legalMoves) {
             this.legalMoves = legalMoves;
       }
-      public void clearLegalMoves(){
-            legalMoves.clear();
-      }
       
       public boolean isWhite() {
             return isWhite;
@@ -91,9 +88,13 @@ public class Piece {
       // Override functions
       public void calculateLegalMoves(Board board) {}
       public boolean canPromote() {return false;}
+<<<<<<< HEAD
       public boolean isUnderCheck(Board board) {return false;}
       
       public Piece copy(){
             return new Piece(new Position(getPos().row(), getPos().col()));
       }
+=======
+      public boolean isUnderCheck() {return false;}
+>>>>>>> parent of efb3a4c (added all pieces no king logic)
 }

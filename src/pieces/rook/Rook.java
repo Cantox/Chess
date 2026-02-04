@@ -1,8 +1,7 @@
 package pieces.rook;
 
+import board.Board;
 import java.util.ArrayList;
-
-import main.Board;
 import libs.Position;
 import libs.Settings;
 import pieces.Piece;
