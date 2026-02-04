@@ -1,4 +1,4 @@
-package pieces;
+package pieces.pawn;
 
 
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import board.Board;
 import libs.Position;
 import libs.Settings;
+import pieces.Piece;
 
 public class WhitePawn extends Pawn {
       public WhitePawn(Position startingPos){

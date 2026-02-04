@@ -1,7 +1,7 @@
-package pieces;
+package pieces.pawn;
 
 import libs.Position;
-import libs.Settings;
+import pieces.Piece;
 
 public class Pawn extends Piece{
       

@@ -1,10 +1,11 @@
-package pieces;
+package pieces.pawn;
 
 import java.util.ArrayList;
 
 import board.Board;
 import libs.Position;
 import libs.Settings;
+import pieces.Piece;
 
 public class BlackPawn extends Pawn {
       public BlackPawn(Position startingPos){
