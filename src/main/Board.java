@@ -2,19 +2,22 @@ package main;
 
 import java.util.ArrayList;
 import libs.*;
+
 import pieces.*;
 
 public class Board {
-      Piece[][] board = new Piece[Settings.ROWS][Settings.COLS];
+      public Piece[][] board = new Piece[Settings.ROWS][Settings.COLS];
       
-      private Piece lastMoveFirstPiece = null;
-      private Position lastMoveFirstPos = null;
-      private Piece lastMoveSecondPiece = null;
-      private Position lastMoveSecondPos = null;
+      private Piece lastMovedPiece = null;
+      private Position lastMovedPiecePos = null;
+      private Piece lastEatenPiece = null;
+      private Position lastEatenPiecePos = null;
       
       public Board(boolean empty){
             if(!empty){
-                  // Fill with pieces
+                  Piece[] pieceSet  = PieceSet.fullSet();
+                  for(Piece piece : pieceSet)
+                        board[piece.getPos().row()][piece.getPos().col()] = piece;
             }
       }
       
@@ -28,7 +31,7 @@ public class Board {
       }
       public Piece getPiece(Position piecePos){
             if(piecePos==null)
-                  return null;
+                  throw new IllegalArgumentException("Piece pos is null");
             
             return board[piecePos.row()][piecePos.col()];
       }
@@ -43,61 +46,67 @@ public class Board {
             return  row>=0 && row<Settings.ROWS && col>=0 && col<Settings.COLS;
       }
       
-      public Position selectPiece(Position piecePos){
-            if(piecePos==null)
-                  return null;
-            
-            if(board[piecePos.row()][piecePos.col()]!=null)
-                  return piecePos;
-            else
-                  return null;
-      }
-      
-      public void move(Piece piece, Position dest){
-            if(piece==null)
-                  return;
-            
-            if(!isValidTile(dest)) // Also checks if tile==null
-                  return;
-            
-            if(!piece.isLegalMove(dest))
-                  return;
+      public boolean move(Piece piece, Position dest){
+            if(piece==null || !isValidTile(dest) || !piece.isLegalMove(dest))
+                  return false;
             
             // Save pieces (to do undo)
-            lastMoveFirstPiece = piece;
-            lastMoveFirstPos = piece.getPos();
-            lastMoveSecondPiece = board[dest.row()][dest.col()];
-            lastMoveSecondPos = dest;
+            lastMovedPiece = piece;
+            lastMovedPiecePos = piece.getPos();
+            lastEatenPiece = board[dest.row()][dest.col()];
+            lastEatenPiecePos = dest;
             
             board[piece.getPos().row()][piece.getPos().col()] = null; // Remove from board
             board[dest.row()][dest.col()] = piece; // Put back on board in new position
             piece.setPos(dest); // Update piece position
             piece.setMovesDone(piece.getMovesDone()+1); // Update moves done with that piece
+            
+            return true;
       }
-      public void move(Position piecePos, Position dest){
+      public boolean move(Position piecePos, Position dest){
             Piece piece = board[piecePos.row()][piecePos.col()];
-            if(piece==null)
-                  return;
-            
-            if(!isValidTile(dest))
-                  return;
-            
-            if(!piece.isLegalMove(dest))
-                  return;
+            if(piece==null || !isValidTile(dest) || !piece.isLegalMove(dest))
+                  return false;
             
             // Save pieces (to do undo)
-            lastMoveFirstPiece = piece;
-            lastMoveFirstPos = piece.getPos();
-            lastMoveSecondPiece = board[dest.row()][dest.col()];
-            lastMoveSecondPos = dest;
+            lastMovedPiece = piece;
+            lastMovedPiecePos = piece.getPos();
+            lastEatenPiece = board[dest.row()][dest.col()];
+            lastEatenPiecePos = dest;
             
             board[piece.getPos().row()][piece.getPos().col()] = null; // Remove from board
             board[dest.row()][dest.col()] = piece; // Put back on board in new position
             board[dest.row()][dest.col()].setPos(dest); // Update piece position
+            piece.setMovesDone(piece.getMovesDone()+1); // Update moves done with that piece
+            
+            return true;
       }
       
       public void undoLastMove(){
-            board[lastMoveFirstPos.row()][lastMoveFirstPos.col()] = lastMoveFirstPiece;
-            board[lastMoveSecondPos.row()][lastMoveSecondPos.col()] = lastMoveSecondPiece;
+            board[lastMovedPiecePos.row()][lastMovedPiecePos.col()] = lastMovedPiece;
+            board[lastMovedPiecePos.row()][lastMovedPiecePos.col()].setPos(lastMovedPiecePos);
+            lastMovedPiece.setMovesDone(lastMovedPiece.getMovesDone()-1);
+            board[lastEatenPiecePos.row()][lastEatenPiecePos.col()] = lastEatenPiece;
+            if(lastEatenPiece!=null)
+                  board[lastEatenPiecePos.row()][lastEatenPiecePos.col()].setPos(lastEatenPiecePos);
+      }
+      
+      public void recalculateLegalMoves(int currentPlayer){
+            boolean isWhiteTurn = currentPlayer == Settings.WHITE;
+            
+            Piece[] pieces = getPiecesArray();
+            // Update affected same team pieces
+            // !!! IT UPDATES ALSO THE MOVED PIECE BECAUSE "LAST EATEN POS" IS STILL IN THE LEGAL MOVES OF THE MOVED PIECE !!!
+            for(Piece piece : pieces)
+                  if( (piece.legalMoves.contains(lastMovedPiecePos) || piece.legalMoves.contains(lastEatenPiecePos)) && piece.isWhite()==isWhiteTurn )
+                        piece.calcLegalMoves(this, currentPlayer);
+            
+            // Update enemy pieces
+            for(Piece piece : pieces)
+                  if(piece.isWhite() == !isWhiteTurn)
+                        piece.calcLegalMoves(this, currentPlayer);
+                        
+            
+            // Update enemy king
       }
 }

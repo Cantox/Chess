@@ -32,7 +32,4 @@ public class Settings {
       
       public static final int WHITE = 1;
       public static final int BLACK = -1;
-      
-      public static final int PL_1 = 1;
-      public static final int PL_2 = 2;
 }

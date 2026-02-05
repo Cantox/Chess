@@ -29,9 +29,9 @@ public class BoardDrawer extends JPanel {
             drawTiles(g);
             if(selectedPiece!=null)
                   drawSelectedPieceHighligth(g);
+            drawPieces(g);
             if(highlightedMoves!=null)
                   drawHighlightedMoves(g);
-            drawPieces(g);
       }
       private void drawTiles(Graphics g){
             for(int r=0; r<Settings.ROWS; r++)
