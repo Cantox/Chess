@@ -19,10 +19,17 @@ public class Piece {
             this.color = color;
             this.startingPos = startingPos;
             this.pos = startingPos;
+            this.movesDone = 0;
       }
       
       public boolean isWhite(){
             return color == Settings.WHITE;
+      }
+      public boolean isLegalMove(Position move){
+            for(Position legalMove : legalMoves)
+                  if(legalMove.row()==move.row() && legalMove.col()==move.col())
+                        return true;
+            return false;
       }
       
       public void setPos(Position pos){
@@ -54,8 +61,14 @@ public class Piece {
       }
       
       public void calcLegalMoves(Piece[][] board, int currentTurn) {
+            if(board==null)
+                  throw new NullPointerException("Board is null");
+            
             if(currentTurn!=Settings.PL_1 && currentTurn!=Settings.PL_2)
                   throw new IllegalArgumentException("Not a valid player");
+      }
+      public Position[] getLegalMovesArray(){
+            return legalMoves.toArray(Position[]::new);
       }
       
       public boolean canPromote()  {return false;}
