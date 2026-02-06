@@ -14,6 +14,7 @@ public final class Pawn extends Piece {
             this.loadSprite(super.isWhite());
       }
       
+      @Override
       public void loadSprite(boolean isWhite) {
             if(isWhite){
                   try { super.scaleAndSetSprite(ImageIO.read( getClass().getResource(Settings.DEFAULT_WHITE_IMG_PATH + "/pawn.png") ) ); }
@@ -25,14 +26,10 @@ public final class Pawn extends Piece {
       }
       
       @Override
-      public void calcLegalMoves(Board board, int currentTurn) {
+      public void calcLegalMoves(Board board) {
             if(board==null)
                   throw new NullPointerException("Board is null");
             
-            if(currentTurn!=Settings.WHITE && currentTurn!=Settings.BLACK)
-                  throw new IllegalArgumentException("Not a valid player");
-            
-            Piece[][] b = board.board;
             legalMoves.clear();
             
             int dir;
@@ -42,7 +39,8 @@ public final class Pawn extends Piece {
             //  Check tile in front
             Position tileChecked = new Position(getPos().row() + dir, getPos().col());
             if(!board.isValidTile(tileChecked)) {}
-            else if(b[tileChecked.row()][tileChecked.col()]==null){
+            
+            else if(board.getPiece(tileChecked)==null){
                   legalMoves.add(tileChecked);
                   tryDoubleStep(board, legalMoves, dir);
             }
@@ -51,8 +49,9 @@ public final class Pawn extends Piece {
             for(int i=-1; i<=1; i+=2){
                   tileChecked = new Position(getPos().row() + dir, getPos().col()+i);
                   if(!board.isValidTile(tileChecked)) {}
-                  else if(b[tileChecked.row()][tileChecked.col()]==null) {}
-                  else if(b[tileChecked.row()][tileChecked.col()].isWhite()==!this.isWhite())
+                  else if(board.getPiece(tileChecked)==null) {}
+                  
+                  else if(board.getPiece(tileChecked).isWhite()==!this.isWhite())
                         legalMoves.add(tileChecked);
             }
       }
@@ -65,7 +64,7 @@ public final class Pawn extends Piece {
             if(!board.isValidTile(tileChecked))
                   return;
             
-            if(board.board[tileChecked.row()][tileChecked.col()]==null)
+            if(board.getPiece(tileChecked)==null)
                   moves.add(tileChecked);
       }
 }

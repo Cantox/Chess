@@ -80,13 +80,7 @@ public class Piece {
             this.sprite = scaledSprite;
       }
       
-      public void calcLegalMoves(Board board, int currentTurn) {
-            if(board==null)
-                  throw new NullPointerException("Board is null");
-            
-            if(currentTurn!=Settings.WHITE && currentTurn!=Settings.BLACK)
-                  throw new IllegalArgumentException("Not a valid player");
-      }
+      public void calcLegalMoves(Board board) {}
       public Position[] getLegalMovesArray(){
             return legalMoves.toArray(Position[]::new);
       }
@@ -94,4 +88,6 @@ public class Piece {
       public boolean canPromote()  {return false;}
       public boolean canCastle() {return false;}
       public boolean isUnderCheck(Piece[][] board) {return false;}
+      
+      public void loadSprite(boolean isWhite) {}
 }

@@ -99,12 +99,12 @@ public class Board {
             // !!! IT UPDATES ALSO THE MOVED PIECE BECAUSE "LAST EATEN POS" IS STILL IN THE LEGAL MOVES OF THE MOVED PIECE !!!
             for(Piece piece : pieces)
                   if( (piece.legalMoves.contains(lastMovedPiecePos) || piece.legalMoves.contains(lastEatenPiecePos)) && piece.isWhite()==isWhiteTurn )
-                        piece.calcLegalMoves(this, currentPlayer);
+                        piece.calcLegalMoves(this);
             
             // Update enemy pieces
             for(Piece piece : pieces)
                   if(piece.isWhite() == !isWhiteTurn)
-                        piece.calcLegalMoves(this, currentPlayer);
+                        piece.calcLegalMoves(this);
                         
             
             // Update enemy king
