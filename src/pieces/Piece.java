@@ -34,6 +34,12 @@ public class Piece {
                         return true;
             return false;
       }
+      public boolean isLegalMove(int moveRow, int moveCol){
+            for(Position legalMove : legalMoves)
+                  if(legalMove.row()==moveRow && legalMove.col()==moveCol)
+                        return true;
+            return false;
+      }
       
       public void setPos(Position pos){
             this.pos = pos;
@@ -87,7 +93,7 @@ public class Piece {
       
       public boolean canPromote()  {return false;}
       public boolean canCastle() {return false;}
-      public boolean isUnderCheck(Piece[][] board) {return false;}
+      public boolean isUnderCheck(Board board) {return false;}
       
       public void loadSprite(boolean isWhite) {}
 }

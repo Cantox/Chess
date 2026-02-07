@@ -9,7 +9,7 @@ public class PieceSet {
                   new Knight(Settings.BLACK, new Position(0,1)),
                   new Bishop(Settings.BLACK, new Position(0,2)),
                   new Queen(Settings.BLACK, new Position(0, 3)),
-                  // King
+                  new King(Settings.BLACK, new Position(0, 4)),
                   new Bishop(Settings.BLACK, new Position(0,5)),
                   new Knight(Settings.BLACK, new Position(0,6)),
                   new Rook(Settings.BLACK, new Position(0,7)),
@@ -27,7 +27,7 @@ public class PieceSet {
                   new Knight(Settings.WHITE, new Position(Settings.ROWS-1,1)),
                   new Bishop(Settings.WHITE, new Position(Settings.ROWS-1,2)),
                   new Queen(Settings.WHITE, new Position(Settings.ROWS-1, 3)),
-                  // King
+                  new King(Settings.WHITE, new Position(Settings.ROWS-1, 4)),
                   new Bishop(Settings.WHITE, new Position(Settings.ROWS-1,5)),
                   new Knight(Settings.WHITE, new Position(Settings.ROWS-1,6)),
                   new Rook(Settings.WHITE, new Position(Settings.ROWS-1,7)),

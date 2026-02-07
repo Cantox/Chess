@@ -10,8 +10,8 @@ public class Board {
       
       private Piece lastMovedPiece = null;
       private Position lastMovedPiecePos = null;
-      private Piece lastEatenPiece = null;
-      private Position lastEatenPiecePos = null;
+      private Piece lastCapturedPiece = null;
+      private Position lastCapturedPiecePos = null;
       
       public Board(boolean empty){
             if(!empty){
@@ -33,7 +33,16 @@ public class Board {
             if(piecePos==null)
                   throw new IllegalArgumentException("Piece pos is null");
             
+            if(!isValidTile(piecePos))
+                  throw new IllegalArgumentException("Piece pos is not a valid tile");
+            
             return board[piecePos.row()][piecePos.col()];
+      }
+      public Piece getPiece(int row, int col){
+            if(!isValidTile(row, col))
+                  throw new IllegalArgumentException("Piece pos is not a valid tile");
+            
+            return board[row][col];
       }
       
       public boolean isValidTile(Position tile){
@@ -53,8 +62,8 @@ public class Board {
             // Save pieces (to do undo)
             lastMovedPiece = piece;
             lastMovedPiecePos = piece.getPos();
-            lastEatenPiece = board[dest.row()][dest.col()];
-            lastEatenPiecePos = dest;
+            lastCapturedPiece = board[dest.row()][dest.col()];
+            lastCapturedPiecePos = dest;
             
             board[piece.getPos().row()][piece.getPos().col()] = null; // Remove from board
             board[dest.row()][dest.col()] = piece; // Put back on board in new position
@@ -71,12 +80,29 @@ public class Board {
             // Save pieces (to do undo)
             lastMovedPiece = piece;
             lastMovedPiecePos = piece.getPos();
-            lastEatenPiece = board[dest.row()][dest.col()];
-            lastEatenPiecePos = dest;
+            lastCapturedPiece = board[dest.row()][dest.col()];
+            lastCapturedPiecePos = dest;
             
             board[piece.getPos().row()][piece.getPos().col()] = null; // Remove from board
             board[dest.row()][dest.col()] = piece; // Put back on board in new position
             board[dest.row()][dest.col()].setPos(dest); // Update piece position
+            piece.setMovesDone(piece.getMovesDone()+1); // Update moves done with that piece
+            
+            return true;
+      }
+      public boolean move(Piece piece, int destRow, int destCol){
+            if(piece==null || !isValidTile(destRow,destCol) || !piece.isLegalMove(destRow,destCol))
+                  return false;
+            
+            // Save pieces (to do undo)
+            lastMovedPiece = piece;
+            lastMovedPiecePos = piece.getPos();
+            lastCapturedPiece = board[destRow][destCol];
+            lastCapturedPiecePos = new Position(destRow, destCol);
+            
+            board[piece.getPos().row()][piece.getPos().col()] = null; // Remove from board
+            board[destRow][destCol] = piece; // Put back on board in new position
+            piece.setPos(new Position(destRow, destCol)); // Update piece position
             piece.setMovesDone(piece.getMovesDone()+1); // Update moves done with that piece
             
             return true;
@@ -86,9 +112,9 @@ public class Board {
             board[lastMovedPiecePos.row()][lastMovedPiecePos.col()] = lastMovedPiece;
             board[lastMovedPiecePos.row()][lastMovedPiecePos.col()].setPos(lastMovedPiecePos);
             lastMovedPiece.setMovesDone(lastMovedPiece.getMovesDone()-1);
-            board[lastEatenPiecePos.row()][lastEatenPiecePos.col()] = lastEatenPiece;
-            if(lastEatenPiece!=null)
-                  board[lastEatenPiecePos.row()][lastEatenPiecePos.col()].setPos(lastEatenPiecePos);
+            board[lastCapturedPiecePos.row()][lastCapturedPiecePos.col()] = lastCapturedPiece;
+            if(lastCapturedPiece!=null)
+                  board[lastCapturedPiecePos.row()][lastCapturedPiecePos.col()].setPos(lastCapturedPiecePos);
       }
       
       public void recalculateLegalMoves(int currentPlayer){
@@ -98,15 +124,12 @@ public class Board {
             // Update affected same team pieces
             // !!! IT UPDATES ALSO THE MOVED PIECE BECAUSE "LAST EATEN POS" IS STILL IN THE LEGAL MOVES OF THE MOVED PIECE !!!
             for(Piece piece : pieces)
-                  if( (piece.legalMoves.contains(lastMovedPiecePos) || piece.legalMoves.contains(lastEatenPiecePos)) && piece.isWhite()==isWhiteTurn )
+                  if( (piece.legalMoves.contains(lastMovedPiecePos) || piece.legalMoves.contains(lastCapturedPiecePos)) && piece.isWhite()==isWhiteTurn )
                         piece.calcLegalMoves(this);
             
             // Update enemy pieces
             for(Piece piece : pieces)
                   if(piece.isWhite() == !isWhiteTurn)
                         piece.calcLegalMoves(this);
-                        
-            
-            // Update enemy king
       }
 }

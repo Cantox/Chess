@@ -14,13 +14,6 @@ public class Main {
       
       public static Board board = new Board(false);
       private static Position selectedPos = null;
-
-      public static Position getSelectedPos() {
-            return selectedPos;
-      }
-      public static void setSelectedPos(Position selectedPos) {
-            Main.selectedPos = selectedPos;
-      }
       
       public static BoardDrawer drawer = new BoardDrawer();
       
@@ -28,7 +21,7 @@ public class Main {
       
       public static void main(String[] args) {
             Settings.loadDotSprite();
-            setSelectedPos(null);
+            selectedPos = null;
             
               JFrame frame = new JFrame("Chess");
               frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
