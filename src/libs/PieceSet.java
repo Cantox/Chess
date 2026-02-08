@@ -44,4 +44,30 @@ public class PieceSet {
             
             return pieces;
       }
+      
+      public static Piece[] checkmate(){
+            Piece[] pieces = {
+                  new King(Settings.BLACK, new Position(0,4)),
+                  new King(Settings.WHITE, new Position(Settings.ROWS-1, 4)),
+                  
+                  new Rook(Settings.WHITE, new Position(2,3)),
+                  new Rook(Settings.WHITE, new Position(2,5)),
+                  new Queen(Settings.WHITE, new Position(3,3)),
+            };
+            
+            return pieces;
+      }
+      
+      public static Piece[] stalemate(){
+            Piece[] pieces = {
+                  new King(Settings.BLACK, new Position(2,Settings.COLS-1)),
+                  new King(Settings.WHITE, new Position(Settings.ROWS-3, Settings.COLS-1)),
+                  
+                  new Pawn(Settings.BLACK, new Position(2, Settings.COLS-2)),
+                  new Bishop(Settings.WHITE, new Position(4,4)),
+                  new Queen(Settings.WHITE, new Position(Settings.ROWS-1,0)),
+            };
+            
+            return pieces;
+      }
 }

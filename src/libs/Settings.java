@@ -10,9 +10,9 @@ public class Settings {
       public static final int COLS = 8;
       
       /** Dimension of the tile in pixels */
-      public static final int TILE_SIZE = 160;
+      public static final int TILE_SIZE = 640/5;
       /** Dimension of the icon in pixels */
-      public static final int ICON_SIZE = 128;
+      public static final int ICON_SIZE = 512/5;
       /** Dimension of the padding between Tile border and icon border in pixels */
       public static final int PADDING = (TILE_SIZE - ICON_SIZE) / 2;
       

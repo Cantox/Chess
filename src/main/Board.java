@@ -56,6 +56,10 @@ public class Board {
       public boolean isValidTile(int row, int col){
             return  row>=0 && row<Settings.ROWS && col>=0 && col<Settings.COLS;
       }
+
+      public Piece getLastMovedPiece() {
+            return lastMovedPiece;
+      }
       
       public boolean move(Piece piece, Position dest){
             if(piece==null || !isValidTile(dest))
@@ -119,7 +123,7 @@ public class Board {
                   board[lastCapturedPiecePos.row()][lastCapturedPiecePos.col()].setPos(lastCapturedPiecePos);
       }
       
-      public void recalculateLegalMoves(int currentPlayer){
+      public void recalculateLegalMoves(int currentPlayer, BoardDrawer drawer){
             boolean isWhiteTurn = currentPlayer == Settings.WHITE;
             Piece[] pieces = getPiecesArray();
             Piece enemyKing = null;
@@ -151,13 +155,10 @@ public class Board {
             
             // Check if enemy is under checkmate or stalemate
             if(enemyKing.isUnderCheckmate(this)){
-                  if(currentPlayer==Settings.WHITE) System.out.println("Checkmate, white won!");
-                  else System.out.println("Checkmate, black won!");
-                  System.exit(0);
+                  drawer.checkmate(currentPlayer);
             }
             if(enemyKing.isUnderStalemate(this)){
-                  System.out.println("Stalemate!");
-                  System.exit(0);
+                  drawer.stalemate(currentPlayer);
             }
       }
 }
