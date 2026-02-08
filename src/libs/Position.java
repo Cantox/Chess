@@ -20,4 +20,7 @@ public record Position(int row, int col) {
       public boolean isEqual(Position p){
             return this.row == p.row() && this.col == p.col();
       }
+      public boolean isEqual(int row, int col){
+            return this.row == row && this.col == col;
+      }
 }

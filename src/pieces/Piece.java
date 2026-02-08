@@ -28,18 +28,6 @@ public class Piece {
       public boolean isWhite(){
             return color == Settings.WHITE;
       }
-      public boolean isLegalMove(Position move){
-            for(Position legalMove : legalMoves)
-                  if(legalMove.isEqual(move))
-                        return true;
-            return false;
-      }
-      public boolean isLegalMove(int moveRow, int moveCol){
-            for(Position legalMove : legalMoves)
-                  if(legalMove.row()==moveRow && legalMove.col()==moveCol)
-                        return true;
-            return false;
-      }
       
       public void setPos(Position pos){
             this.pos = pos;
@@ -90,10 +78,29 @@ public class Piece {
       public Position[] getLegalMovesArray(){
             return legalMoves.toArray(Position[]::new);
       }
+      public boolean isLegalMove(Position move){
+            for(Position legalMove : legalMoves)
+                  if(legalMove.isEqual(move))
+                        return true;
+            return false;
+      }
+      public boolean isLegalMove(int moveRow, int moveCol){
+            for(Position legalMove : legalMoves)
+                  if(legalMove.row()==moveRow && legalMove.col()==moveCol)
+                        return true;
+            return false;
+      }
       
+      // Pawn methods
       public boolean canPromote()  {return false;}
+      
+      // King methods
       public boolean canCastle() {return false;}
       public boolean isUnderCheck(Board board) {return false;}
+      public boolean isUnderCheckmate(Board board) {return false;}
+      public boolean isUnderStalemate(Board board) {return false;}
+      public boolean isCastlingMove(Position move) { return false; }
+      public boolean castle(Board board, Position dest) {return false;}
       
       public void loadSprite(boolean isWhite) {}
 }

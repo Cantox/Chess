@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import libs.*;
 
 import pieces.*;
@@ -56,7 +58,7 @@ public class Board {
       }
       
       public boolean move(Piece piece, Position dest){
-            if(piece==null || !isValidTile(dest) || !piece.isLegalMove(dest))
+            if(piece==null || !isValidTile(dest))
                   return false;
             
             // Save pieces (to do undo)
@@ -74,7 +76,7 @@ public class Board {
       }
       public boolean move(Position piecePos, Position dest){
             Piece piece = board[piecePos.row()][piecePos.col()];
-            if(piece==null || !isValidTile(dest) || !piece.isLegalMove(dest))
+            if(piece==null || !isValidTile(dest))
                   return false;
             
             // Save pieces (to do undo)
@@ -91,7 +93,7 @@ public class Board {
             return true;
       }
       public boolean move(Piece piece, int destRow, int destCol){
-            if(piece==null || !isValidTile(destRow,destCol) || !piece.isLegalMove(destRow,destCol))
+            if(piece==null || !isValidTile(destRow,destCol))
                   return false;
             
             // Save pieces (to do undo)
@@ -119,17 +121,43 @@ public class Board {
       
       public void recalculateLegalMoves(int currentPlayer){
             boolean isWhiteTurn = currentPlayer == Settings.WHITE;
-            
             Piece[] pieces = getPiecesArray();
-            // Update affected same team pieces
-            // !!! IT UPDATES ALSO THE MOVED PIECE BECAUSE "LAST EATEN POS" IS STILL IN THE LEGAL MOVES OF THE MOVED PIECE !!!
-            for(Piece piece : pieces)
-                  if( (piece.legalMoves.contains(lastMovedPiecePos) || piece.legalMoves.contains(lastCapturedPiecePos)) && piece.isWhite()==isWhiteTurn )
-                        piece.calcLegalMoves(this);
+            Piece enemyKing = null;
             
             // Update enemy pieces
-            for(Piece piece : pieces)
-                  if(piece.isWhite() == !isWhiteTurn)
-                        piece.calcLegalMoves(this);
+            for(Piece piece : pieces){
+                  if(piece.isWhite()!=isWhiteTurn && piece instanceof King)
+                        enemyKing = piece;
+                  piece.calcLegalMoves(this);
+            }
+            
+            if(enemyKing==null)
+                  throw new IllegalArgumentException("enemy king is null");
+            
+            // Remove moves that expose the king
+            for(Piece piece : pieces){
+                  if(piece.isWhite()==isWhiteTurn)
+                        continue;
+
+                  Iterator<Position> it = piece.legalMoves.iterator();
+                  while(it.hasNext()){
+                        Position legalMove = it.next();
+                        move(piece, legalMove);
+                        if(enemyKing.isUnderCheck(this))
+                              it.remove();
+                        undoLastMove();
+                  }
+            }
+            
+            // Check if enemy is under checkmate or stalemate
+            if(enemyKing.isUnderCheckmate(this)){
+                  if(currentPlayer==Settings.WHITE) System.out.println("Checkmate, white won!");
+                  else System.out.println("Checkmate, black won!");
+                  System.exit(0);
+            }
+            if(enemyKing.isUnderStalemate(this)){
+                  System.out.println("Stalemate!");
+                  System.exit(0);
+            }
       }
 }

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import libs.*;
+import pieces.Piece;
 
 /**
  * Icons by: https://www.flaticon.com/authors/good-ware
@@ -53,21 +54,32 @@ public class Main {
             
             boolean isWhiteTurn = currentPlayer == Settings.WHITE;
             if(selectedPos==null){ // Select piece
-                  if(board.board[clickedTile.row()][clickedTile.col()]!=null && board.board[clickedTile.row()][clickedTile.col()].isWhite()==isWhiteTurn){
+                  Piece selectedPiece = board.getPiece(clickedTile);
+                  if(selectedPiece!=null && selectedPiece.isWhite()==isWhiteTurn){
                         selectedPos = clickedTile;
                         drawer.redraw(board.getPiecesArray(), selectedPos, board.getPiece(selectedPos).getLegalMovesArray());
                   }
             } else { // Move piece
-                  boolean pieceMoved = board.move(selectedPos, clickedTile);
+                  Piece selectedPiece = board.getPiece(selectedPos);
+                  
+                  if(selectedPiece.isLegalMove(clickedTile)){
+                        boolean pieceMoved;
+                        
+                        if(selectedPiece.isCastlingMove(clickedTile))
+                              pieceMoved = selectedPiece.castle(board,clickedTile);
+                        else
+                              pieceMoved = board.move(selectedPiece, clickedTile);
+                        
+                        // Switch player and recalculate moves
+                        if(pieceMoved) {
+                              board.recalculateLegalMoves(currentPlayer);
+                              if(currentPlayer==Settings.WHITE) currentPlayer=Settings.BLACK;
+                              else currentPlayer=Settings.WHITE;
+                        }
+                  }
+                  
                   selectedPos = null;
                   drawer.redraw(board.getPiecesArray(), null, null);
-                  
-                  // Switch player and recalculate moves
-                  if(pieceMoved) {
-                        board.recalculateLegalMoves(currentPlayer);
-                        if(currentPlayer==Settings.WHITE) currentPlayer=Settings.BLACK;
-                        else currentPlayer=Settings.WHITE;
-                  }
             }
       }
 }

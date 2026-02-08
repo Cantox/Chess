@@ -8,13 +8,10 @@ import libs.*;
 import main.Board;
 
 public final class King extends Piece {
-      boolean underCheck = false;
-      
       public King(int color, Position startingPos) {
             super(color, startingPos);
             
             this.loadSprite(super.isWhite());
-            underCheck = false;
       }
       
       @Override
@@ -40,17 +37,90 @@ public final class King extends Piece {
                   for(int c=-1; c<=1; c++){
                         if(r==0 && c==0)
                               continue;
+                        
                         int checkedRow = getPos().row()+r, checkedCol = getPos().col()+c;
                         if(!board.isValidTile(checkedRow, checkedCol))
                               continue;
+                        
                         Piece p = board.getPiece(checkedRow, checkedCol);
                         if(p!=null && p.isWhite()==this.isWhite())
                               continue;
-                        board.move(this, checkedRow, checkedCol);
-                        if(!isUnderCheck(board))
-                              legalMoves.add(new Position(checkedRow,checkedCol));
-                        board.undoLastMove();
+                        
+                        boolean moved = board.move(this, checkedRow, checkedCol);
+                        
+                        if(moved){
+                              if(!isUnderCheck(board))
+                                    legalMoves.add(new Position(checkedRow,checkedCol));
+                        
+                              board.undoLastMove();
+                        }
                   }
+            
+            // Castle check
+            if(canCastleKingSide(board))
+                  legalMoves.add(new Position(getPos().row(), getPos().col() + 2));
+            if(canCastleQueenSide(board))
+                  legalMoves.add(new Position(getPos().row(), getPos().col() - 2));
+      }
+      
+      @Override
+      public boolean castle(Board board, Position dest){
+            int row = getPos().row(), col = getPos().col();
+            if(dest.isEqual(row, col+2)){
+                  board.move(this, dest);
+                  board.move(board.getPiece(row, col+3), row, col+1);
+                  return true;
+            }
+            else if (dest.isEqual(row, col-2)){
+                  board.move(this, dest);
+                  board.move(board.getPiece(row, col-4), row, col-1);
+                  return true;
+            }
+            
+            return false;
+      }
+      @Override
+      public boolean isCastlingMove(Position move){
+            return move.isEqual(getPos().row(), getPos().col() + 2) || move.isEqual(getPos().row(), getPos().col() - 2);
+      }
+      
+      private boolean canCastleKingSide(Board board){
+            if(getMovesDone()!=0 || isUnderCheck(board)) return false;
+            int row = getPos().row(), col = getPos().col();
+            
+            if(!board.isValidTile(row,col + 3)) return false;
+            Piece rook = board.getPiece(row,col + 3);
+            if(!(rook instanceof Rook) || rook.getMovesDone()!=0 || rook.isWhite()!=this.isWhite()) return false;
+            
+            for(int i=1; i<=2; i++){
+                  if(board.getPiece(row, col + i)!=null) return false;
+                  board.move(this, row, col + i);
+                  boolean underCheck = isUnderCheck(board);
+                  board.undoLastMove();
+                  if(underCheck) return false;
+            }
+            
+            return true;
+      }
+      private boolean canCastleQueenSide(Board board){
+            if(getMovesDone()!=0 || isUnderCheck(board)) return false;
+            int row = getPos().row(), col = getPos().col();
+            
+            if(!board.isValidTile(row,col - 4)) return false;
+            Piece rook = board.getPiece(row,col - 4);
+            if(!(rook instanceof Rook) || rook.getMovesDone()!=0 || rook.isWhite()!=this.isWhite()) return false;
+            
+            for(int i=-1; i>=-3; i--){
+                  if(board.getPiece(row, col + i)!=null) return false;
+                  if(i>-3){
+                        board.move(this, row, col + i);
+                        boolean underCheck = isUnderCheck(board);
+                        board.undoLastMove();
+                        if(underCheck) return false;
+                  }
+            }
+            
+            return true;
       }
       
       @Override
@@ -89,7 +159,6 @@ public final class King extends Piece {
             
             return false;
       }
-      
       private boolean rook_queenCheck(Board board, int thisRow, int thisCol){
             int[][] directions = { {0,1}, {1,0}, {0,-1}, {-1,0}};
             
@@ -111,7 +180,6 @@ public final class King extends Piece {
             
             return false;
       }
-      
       private boolean bishop_queenCheck(Board board, int thisRow, int thisCol){
             int[][] directions = { {1,1}, {1,-1}, {-1,1}, {-1,-1}};
             
@@ -133,7 +201,6 @@ public final class King extends Piece {
             
             return false;
       }
-      
       private boolean knightCheck(Board board, int thisRow, int thisCol){
             // Two tile offset
             for(int twoDiff=-2; twoDiff<=2; twoDiff+=4)
@@ -158,7 +225,6 @@ public final class King extends Piece {
                   }
             return false;
       }
-      
       private boolean kingCheck(Board board, int thisRow, int thisCol){
             for(int r=-1; r<=1; r++)
                   for(int c=-1; c<=1; c++){
@@ -173,5 +239,29 @@ public final class King extends Piece {
                   }
             
             return false;
+      }
+      
+      @Override
+      public boolean isUnderCheckmate(Board board) {
+            if(!isUnderCheck(board) || !legalMoves.isEmpty())
+                  return false;
+            
+            for(Piece piece : board.getPiecesArray()){
+                  if(piece.isWhite()==this.isWhite() && !piece.legalMoves.isEmpty())
+                        return false;
+            }
+            return true;
+      }
+      
+      @Override
+      public boolean isUnderStalemate(Board board) {
+            if(isUnderCheck(board) || !legalMoves.isEmpty())
+                  return false;
+            
+            for(Piece piece : board.getPiecesArray()){
+                  if(piece.isWhite()==this.isWhite() && !piece.legalMoves.isEmpty())
+                        return false;
+            }
+            return true;
       }
 }
