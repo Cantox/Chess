@@ -1,8 +1,8 @@
-\# Java Chess App
+# Java Chess App
 
 
 
-A simple Java-based chess application designed for \*\*local two-player gameplay\*\*. This app features \*\*two boards side by side\*\*, allowing both players to visualize their moves simultaneously, making it easier to track game states and practice strategies.
+A simple Java-based chess application designed for **local two-player gameplay**. This app features **two boards side by side**, allowing both players to visualize their moves simultaneously, making it easier to track game states and practice strategies.
 
 <img src="./AppScreen.png">
 
@@ -10,19 +10,19 @@ A simple Java-based chess application designed for \*\*local two-player gameplay
 
 
 
-\## Features
+## Features
 
 
 
-\* \*\*Local Two-Player Mode\*\*: Play chess with a friend on the same computer.
+* **Local Two-Player Mode**: Play chess with a friend on the same computer.
 
-\* \*\*Dual Boards\*\*: Two boards displayed side by side for better visibility of each player’s perspective.
+* **Dual Boards**: Two boards displayed side by side for better visibility of each player’s perspective.
 
-\* \*\*Turn-Based Gameplay\*\*: Players alternate turns following standard chess rules.
+* **Turn-Based Gameplay**: Players alternate turns following standard chess rules.
 
-\* \*\*Piece Movement Validation\*\*: Enforces legal chess moves.
+* **Piece Movement Validation**: Enforces legal chess moves.
 
-\* \*\*Simple and Intuitive GUI\*\*: Clean interface built with Java Swing for easy interaction.
+* **Simple and Intuitive GUI**: Clean interface built with Java Swing for easy interaction.
 
 
 
@@ -30,7 +30,7 @@ A simple Java-based chess application designed for \*\*local two-player gameplay
 
 
 
-\## Installation
+## Installation
 
 
 
@@ -38,59 +38,39 @@ The file structure is based on the default netBeans IDE project structure. Use t
 
 
 
-1\. Ensure you have \*\*Java JDK 8 or higher\*\* installed.
+1. Ensure you have **Java JDK 8 or higher** installed.
 
-2\. Clone the repository:
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  git clone https://github.com/Cantox/Chess.git
-
-&nbsp;  ```
-
-3\. Navigate to the classes directory:
+2. Clone the repository:
 
 
 
-&nbsp;  ```bash
+```bash
 
-&nbsp;  cd chess/build/classes
+git clone https://github.com/Cantox/Chess.git
 
-&nbsp;  ```
+```
 
-
-
-4\. Run the application:
+3. Navigate to the classes directory:
 
 
 
-&nbsp;  ```bash
+```bash
 
-&nbsp;  java main.Main
+cd chess/build/classes
 
-&nbsp;  ```
-
-
-
----
+```
 
 
 
-\## Usage
+4. Run the application:
 
 
 
-1\. Launch the application.
+```bash
 
-2\. Two chess boards will appear side by side.
+java main.Main
 
-3\. Player 1 starts by moving their pieces on the left board.
-
-4\. Player 2 moves on the right board.
-
-5\. Continue alternating turns until checkmate or stalemate.
+```
 
 
 
@@ -98,9 +78,29 @@ The file structure is based on the default netBeans IDE project structure. Use t
 
 
 
-\## Modify textures
+## Usage
 
-You can \*\*modify the used textures\*\* by changing the files inside \_resourcepacks/default; make sure you \*\*don't change the file names\*\*. You can also \*\*add you own packs\*\* using the same structure of the default pack and then \*\*modifying the path\*\* inside Settings.java. You can also change any other setting like colors or tile dimension in that file. Remember to \*\*rebuild the project\*\* after the changes.
+
+
+1. Launch the application.
+
+2. Two chess boards will appear side by side.
+
+3. Player 1 starts by moving their pieces on the left board.
+
+4. Player 2 moves on the right board.
+
+5. Continue alternating turns until checkmate or stalemate.
+
+
+
+---
+
+
+
+## Modify textures
+
+You can **modify the used textures** by changing the files inside `_resourcepacks/default`; make sure you **don't change the file names**. You can also **add you own packs** using the same structure of the default pack and then **modifying the path** inside `Settings.java`. You can also change any other setting like colors or tile dimension in that file. Remember to **rebuild the project** after the changes.
 
 
 
