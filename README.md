@@ -4,7 +4,7 @@
 
 A simple Java-based chess application designed for **local two-player gameplay**. This app features **two boards side by side**, allowing both players to visualize their moves simultaneously, making it easier to track game states and practice strategies.
 
-![]("./AppScreen.png")
+![Screenshot of the application running](./AppScreen.png)
 
 ---
 
